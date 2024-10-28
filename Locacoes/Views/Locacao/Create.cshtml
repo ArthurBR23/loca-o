@@ -1,0 +1,98 @@
+﻿@model Locacoes.Models.Locacao
+
+@{
+    ViewData["Title"] = "Create";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Locacao</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="DataLocacao" class="control-label"></label>
+                <input asp-for="DataLocacao" class="form-control" type="date" />
+                <span asp-validation-for="DataLocacao" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ValorTotal" class="control-label"></label>
+                <input asp-for="ValorTotal" class="form-control" />
+                <span asp-validation-for="ValorTotal" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ClienteId" class="control-label"></label>
+                <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+
+            <h4>Veículo</h4>
+            <div class="form-group">
+                <label for="VeiculoId">Veículo</label>
+                <select id="veiculoSelect" class="form-control">
+                </select>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="armazenarVeiculo()">+</button>
+
+            <h5>Veículos Locados</h5>
+            <ul id="listaVeiculos" class="list-group"></ul>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        const veiculos = [
+            { id: 1, nome: "Paraty da mãe da Maíra" },
+            { id: 2, nome: "Celtinha da Kananda" },
+            { id: 3, nome: "Carro automatico do Larissão" },
+            { id: 4, nome: "Corsinha do Tutu ( na vdd é da mãe dele)" },
+        ];
+
+        function adicionarVeiculos() {
+            const veiculoSelect = document.getElementById("veiculoSelect");
+            veiculos.forEach(veiculo => {
+                const option = document.createElement("option");
+                option.value = veiculo.id;
+                option.textContent = veiculo.nome;
+                veiculoSelect.appendChild(option);
+            });
+        }
+        function armazenarVeiculo() {
+            const veiculoSelect = document.getElementById("veiculoSelect");
+            const veiculoId = veiculoSelect.value;
+            const veiculoNome = veiculoSelect.options[veiculoSelect.selectedIndex].text;
+
+            const listaVeiculos = document.getElementById("listaVeiculos");
+
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item";
+            listItem.textContent = veiculoNome;
+
+            const inputHidden = document.createElement("input");
+            inputHidden.type = "hidden";
+            inputHidden.name = "VeiculosLocados[]";
+            inputHidden.value = veiculoId;
+
+            listItem.appendChild(inputHidden);
+            listaVeiculos.appendChild(listItem);
+        }
+
+        document.addEventListener("DOMContentLoaded", adicionarVeiculos);
+    </script>
+}
